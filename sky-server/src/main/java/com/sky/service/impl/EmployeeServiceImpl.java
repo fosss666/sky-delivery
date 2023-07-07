@@ -72,10 +72,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setStatus(StatusConstant.ENABLE);
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
-        employee.setPassword(PasswordConstant.DEFAULT_PASSWORD);
+        String password = DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes());
+        employee.setPassword(password);
         //TODO 设置创建该员工的用户id和修改该员工的用户id
         employee.setCreateUser(10L);
         employee.setUpdateUser(10L);
+
+        employeeMapper.insert(employee);
     }
 
 }
