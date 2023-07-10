@@ -23,4 +23,8 @@ public interface EmployeeService {
      *
      */
     PageResult searchPage(EmployeePageQueryDTO employeePageQueryDTO);
+    /**
+     * 启用禁用员工账号
+     */
+    void updateStatus(int status, Long id);
 }

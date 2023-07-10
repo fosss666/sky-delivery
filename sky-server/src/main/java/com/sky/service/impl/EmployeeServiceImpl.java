@@ -102,4 +102,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+    /**
+     * 启用禁用员工账号
+     */
+    @Override
+    public void updateStatus(int status, Long id) {
+        employeeMapper.updateStatus(status, id);
+    }
+
 }

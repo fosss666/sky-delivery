@@ -82,7 +82,7 @@ public class EmployeeController {
     @ApiOperation("新增员工")
     @PostMapping
     public Result<String> save(@RequestBody EmployeeDTO employeeDTO) {
-        log.info("新增员工：{}",employeeDTO);
+        log.info("新增员工：{}", employeeDTO);
         employeeService.save(employeeDTO);
         return Result.success("新增员工成功");
     }
@@ -92,10 +92,21 @@ public class EmployeeController {
      */
     @ApiOperation("分页查询")
     @GetMapping("/page")
-    public Result searchPage(EmployeePageQueryDTO employeePageQueryDTO) {
+    public Result<PageResult> searchPage(EmployeePageQueryDTO employeePageQueryDTO) {
         log.info("分页查询：{}", employeePageQueryDTO);
         PageResult pageResult = employeeService.searchPage(employeePageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 启用禁用员工账号
+     */
+    @ApiOperation("启用禁用员工账号")
+    @PostMapping("/status/{status}")
+    public Result updateStatus(@PathVariable("status") Integer status, @RequestParam("id") Long id) {
+        log.info("修改员工账号状态：{}", id);
+        employeeService.updateStatus(status, id);
+        return Result.success();
     }
 
 }

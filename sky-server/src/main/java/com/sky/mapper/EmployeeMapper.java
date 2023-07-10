@@ -33,4 +33,8 @@ public interface EmployeeMapper {
      * 模糊查询
      */
     Page<Employee> searchPage(@Param("page") EmployeePageQueryDTO employeePageQueryDTO);
+    /**
+     * 启用禁用员工账号
+     */
+    void updateStatus(@Param("status") int status,@Param("id") Long id);
 }
