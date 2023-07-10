@@ -27,4 +27,12 @@ public interface EmployeeService {
      * 启用禁用员工账号
      */
     void updateStatus(int status, Long id);
+    /**
+     * 编辑员工信息
+     */
+    void updateEmployee(EmployeeDTO employeeDTO);
+    /**
+     * 根据id查询员工
+     */
+    Employee getById(Long id);
 }

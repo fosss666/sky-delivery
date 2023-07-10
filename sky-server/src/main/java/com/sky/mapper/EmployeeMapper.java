@@ -37,4 +37,13 @@ public interface EmployeeMapper {
      * 启用禁用员工账号
      */
     void updateStatus(@Param("status") int status,@Param("id") Long id);
+    /**
+     * 编辑员工信息
+     * @param employee
+     */
+    void updateEmployee(@Param("employee") Employee employee);
+    /**
+     * 根据id查询员工
+     */
+    Employee getById(@Param("id") Long id);
 }
