@@ -56,4 +56,9 @@
         from sky_take_out.employee
         where id = #{id}
     </select>
+    <update id="editPassword">
+        update sky_take_out.employee
+        set password =#{editDto.newPassword}
+        where id = #{editDto.empId}
+    </update>
 </mapper>

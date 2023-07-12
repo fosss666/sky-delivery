@@ -9,6 +9,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -129,6 +129,30 @@ public class EmployeeServiceImpl implements EmployeeService {
         //employee.setUpdateUser(BaseContext.getCurrentId());
         //employee.setUpdateTime(LocalDateTime.now());
         employeeMapper.updateEmployee(employee);
+    }
+
+    /**
+     * 修改密码
+     *
+     * @return
+     */
+    @Override
+    public boolean editPassword(PasswordEditDTO passwordEditDTO) {
+        //先比较原密码是否正确
+        Long empId = BaseContext.getCurrentId();
+        passwordEditDTO.setEmpId(empId);
+        //根据用户id查找该用户
+        Employee employee = employeeMapper.getById(empId);
+        //比较密码是否正确
+        String s = DigestUtils.md5DigestAsHex(passwordEditDTO.getOldPassword().getBytes());
+        if (!s.equals(employee.getPassword())) {
+            return false;
+        }
+        //将密码加密设置到原对象
+        passwordEditDTO.setNewPassword(DigestUtils.md5DigestAsHex(passwordEditDTO.getNewPassword().getBytes()));
+        //修改密码
+        employeeMapper.editPassword(passwordEditDTO);
+        return true;
     }
 
 

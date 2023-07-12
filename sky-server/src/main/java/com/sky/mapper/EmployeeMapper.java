@@ -3,6 +3,7 @@ package com.sky.mapper;
 import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Insert;
@@ -54,4 +55,8 @@ public interface EmployeeMapper {
      * 根据id查询员工
      */
     Employee getById(@Param("id") Long id);
+    /**
+     * 修改密码
+     */
+    void editPassword(@Param("editDto") PasswordEditDTO passwordEditDTO);
 }
