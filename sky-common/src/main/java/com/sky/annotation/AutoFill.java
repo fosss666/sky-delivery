@@ -18,5 +18,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoFill {
     //设置自动填充类型
-    OperationType vlaue();
+    OperationType value();
 }

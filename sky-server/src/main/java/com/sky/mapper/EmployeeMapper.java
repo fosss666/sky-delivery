@@ -19,7 +19,7 @@ public interface EmployeeMapper {
      * @param username
      * @return
      */
-    @Select("select * from employee where username = #{username}")
+    @Select("select * from sky_take_out.employee where username = #{username}")
     Employee getByUsername(String username);
 
     /**
@@ -29,7 +29,7 @@ public interface EmployeeMapper {
             "create_user, update_user)values (#{employee.name},#{employee.username},#{employee.password},#{employee.phone}," +
             "#{employee.sex},#{employee.idNumber},#{employee.createTime},#{employee.updateTime},#{employee.createUser}," +
             "#{employee.updateUser})")
-    @AutoFill(vlaue = OperationType.INSERT)
+    @AutoFill(value = OperationType.INSERT)
     void insert(@Param("employee") Employee employee);
 
     /**
@@ -47,7 +47,7 @@ public interface EmployeeMapper {
      *
      * @param employee
      */
-    @AutoFill(vlaue = OperationType.UPDATE)
+    @AutoFill(value = OperationType.UPDATE)
     void updateEmployee(@Param("employee") Employee employee);
 
     /**

@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 @Component
 @Aspect
 public class AutoFillAspect {
+    //第一个*表示返回值任意，最后括号里的..表示参数任意
     @Pointcut("execution(* com.sky.mapper.*.*(..)) && @annotation(com.sky.annotation.AutoFill)")
     public void autoFillPointCut() {
     }
@@ -38,13 +39,14 @@ public class AutoFillAspect {
         //获取到当前被拦截的方法上的数据库操作类型
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         AutoFill autoFill = signature.getMethod().getAnnotation(AutoFill.class);
-        OperationType operationType = autoFill.vlaue();
+        OperationType operationType = autoFill.value();
         //获取到当前被拦截的方法的参数--实体对象
         Object[] arg = joinPoint.getArgs();
 
         if (arg == null || arg.length == 0) {
             return;
         }
+        //提前约定一下第一个参数是实体对象
         Object entity = arg[0];
 
         //准备赋值的数据
