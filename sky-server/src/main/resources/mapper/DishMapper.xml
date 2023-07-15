@@ -8,5 +8,21 @@
         VALUES (#{dish.name}, #{dish.categoryId}, #{dish.price}, #{dish.image}, #{dish.description}, #{dish.createTime},
                 #{dish.updateTime}, #{dish.createUser}, #{dish.updateUser})
     </insert>
+    <select id="select" resultType="com.sky.vo.DishVO">
+        select d.* ,c.name as categoryName from sky_take_out.dish d left join sky_take_out.category c
+        on d.category_id = c.id
+        <where>
+            <if test="categoryId != null">
+                d.category_id=#{categoryId}
+            </if>
+            <if test="name != null">
+                and d.name like concat("%",#{name},"%")
+            </if>
+            <if test="status != null">
+                and d.status=#{status}
+            </if>
+        </where>
+        order by d.update_time DESC
+    </select>
 
 </mapper>
