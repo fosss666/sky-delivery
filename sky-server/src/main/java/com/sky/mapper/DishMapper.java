@@ -48,4 +48,12 @@ public interface DishMapper {
      */
     @AutoFill(OperationType.UPDATE)
     void update(@Param("dish") Dish dish);
+
+    /**
+     * 菜品停售启售
+     *
+     * @param id 菜品id
+     */
+    @Update("update sky_take_out.dish set status=#{status} where id=#{id}")
+    void updateStatus(@Param("status") Integer status, @Param("id") Long id);
 }
