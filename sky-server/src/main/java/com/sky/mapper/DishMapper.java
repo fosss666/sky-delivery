@@ -5,9 +5,12 @@ import com.sky.annotation.AutoFill;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface DishMapper {
@@ -26,7 +29,18 @@ public interface DishMapper {
 
     /**
      * 条件查询
+     *
      * @return
      */
     Page<DishVO> select(@Param("categoryId") Integer categoryId, @Param("name") String name, @Param("status") Integer status);
+
+    /**
+     * 删除菜品表中的菜品
+     *
+     * @param ids
+     */
+    void deleteBatch(@Param("ids") List<Long> ids);
+
+    @Select("select  * from sky_take_out.dish where id=#{id}")
+    Dish getById(Long id);
 }

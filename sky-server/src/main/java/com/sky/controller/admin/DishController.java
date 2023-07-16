@@ -8,10 +8,12 @@ import com.sky.result.Result;
 import com.sky.service.DishService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author: fosss
@@ -47,6 +49,17 @@ public class DishController {
         log.info("菜单分页查询：{}", dishPageQueryDTO);
         PageResult pageResult = dishService.searchPage(dishPageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 删除菜品
+     */
+    @ApiOperation("删除菜品")
+    @DeleteMapping
+    public Result deleteByIds(@RequestParam("ids") List<Long> ids) {
+        log.info("删除菜品：{}", ids);
+        dishService.deleteByIds(ids);
+        return Result.success();
     }
 }
 

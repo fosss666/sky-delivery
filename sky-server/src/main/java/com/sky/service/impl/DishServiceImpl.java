@@ -2,25 +2,24 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.sky.annotation.AutoFill;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
-import com.sky.enumeration.OperationType;
+import com.sky.entity.SetmealDish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorsMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
-import com.sky.vo.DishItemVO;
-import com.sky.vo.DishOverViewVO;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +35,8 @@ public class DishServiceImpl implements DishService {
 
     @Resource
     private DishFlavorsMapper dishFlavorsMapper;
+    @Resource
+    private SetmealDishMapper setmealDishMapper;
 
     /**
      * 新增菜品
@@ -72,6 +73,37 @@ public class DishServiceImpl implements DishService {
         PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
         Page<DishVO> page = dishMapper.select(dishPageQueryDTO.getCategoryId(), dishPageQueryDTO.getName(), dishPageQueryDTO.getStatus());
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 删除菜品
+     *
+     * @param ids
+     */
+    @Transactional
+    @Override
+    public void deleteByIds(List<Long> ids) {
+        //判断当前菜品是否存在起售中的
+        for (Long id : ids) {
+            Dish dish = dishMapper.getById(id);
+            if (dish != null && dish.getStatus().equals(StatusConstant.ENABLE)) {
+                throw new DeletionNotAllowedException("菜品起售，不可删除");
+            }
+        }
+
+        //判断当前菜品是否被套餐关联
+        List<SetmealDish> setmealDishes = setmealDishMapper.getSetmealsByDishIds(ids);
+        if (setmealDishes != null && setmealDishes.size() > 0) {
+            //有关联的
+            throw new DeletionNotAllowedException("菜品与套餐关联，不能删除");
+        }
+
+        //根据菜品id删除口味表中的口味
+        dishFlavorsMapper.deleteBatch(ids);
+
+        //删除菜品表中的菜品
+        dishMapper.deleteBatch(ids);
+
     }
 }
 

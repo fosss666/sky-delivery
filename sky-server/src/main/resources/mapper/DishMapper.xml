@@ -24,5 +24,12 @@
         </where>
         order by d.update_time DESC
     </select>
-
+    <delete id="deleteBatch">
+        delete
+        from sky_take_out.dish
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
