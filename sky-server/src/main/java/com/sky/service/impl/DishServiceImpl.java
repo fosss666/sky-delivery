@@ -16,11 +16,14 @@ import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: fosss
@@ -104,6 +107,54 @@ public class DishServiceImpl implements DishService {
         //删除菜品表中的菜品
         dishMapper.deleteBatch(ids);
 
+    }
+
+    /**
+     * 根据id查询菜品
+     */
+    @Override
+    public DishVO getById(Long id) {
+        DishVO dishVO = new DishVO();
+        //查询菜品信息
+        Dish dish = dishMapper.getById(id);
+        BeanUtils.copyProperties(dish, dishVO);
+        //查询并设置口味信息
+        List<DishFlavor> dishFlavors = dishFlavorsMapper.getByDishId(id);
+        dishVO.setFlavors(dishFlavors);
+        return dishVO;
+    }
+
+    /**
+     * 修改菜品
+     */
+    @Transactional
+    @Override
+    public void updateDish(DishDTO dishDTO) {
+        Long dishId = dishDTO.getId();
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+        ArrayList<Long> id = new ArrayList<>();
+        id.add(dishId);
+
+        //创建时间会丢失，不采用此方法
+        ////先删除再增加
+        //dishMapper.deleteBatch(id);
+        //dishMapper.insert(dish);
+
+        dishMapper.update(dish);
+
+        //口味表没有创建时间，所以可以采用这个方法。先删除再增加口味
+        if (dishDTO.getFlavors() != null && dishDTO.getFlavors().size() > 0) {
+            dishFlavorsMapper.deleteBatch(id);
+
+            //设置dishId！！！
+            List<DishFlavor> dishFlavorList = dishDTO.getFlavors().stream().map(flavor -> {
+                flavor.setDishId(dishId);
+                return flavor;
+            }).collect(Collectors.toList());
+            //执行插入
+            dishFlavorsMapper.insertBatch(dishFlavorList);
+        }
     }
 }
 

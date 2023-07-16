@@ -6,10 +6,12 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -59,6 +61,27 @@ public class DishController {
     public Result deleteByIds(@RequestParam("ids") List<Long> ids) {
         log.info("删除菜品：{}", ids);
         dishService.deleteByIds(ids);
+        return Result.success();
+    }
+
+    /**
+     * 根据id查询菜品
+     */
+    @ApiOperation("根据id查询菜品")
+    @GetMapping("/{id}")
+    public Result<DishVO> getById(@PathVariable("id") Long id) {
+        log.info("根据id查询菜品：{}", id);
+        DishVO dishVO = dishService.getById(id);
+        return Result.success(dishVO);
+    }
+
+    /**
+     * 修改菜品
+     */
+    @ApiOperation("修改菜品")
+    @PutMapping
+    public Result updateDish(@RequestBody DishDTO dishDTO) {
+        dishService.updateDish(dishDTO);
         return Result.success();
     }
 }
