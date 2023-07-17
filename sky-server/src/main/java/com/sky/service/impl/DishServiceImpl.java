@@ -16,7 +16,6 @@ import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -171,10 +170,11 @@ public class DishServiceImpl implements DishService {
      * 根据分类id查询菜品
      */
     @Override
-    public List<Dish> searchDishesByCategoryId(Long categoryId) {
-        return dishMapper.searchDishesByCategoryId(categoryId);
+    public List<Dish> searchDishesByCategoryId(Long categoryId, String name) {
+        return dishMapper.searchDishesByCategoryId(categoryId, name);
 
     }
+
 }
 
 

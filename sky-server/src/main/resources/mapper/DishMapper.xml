@@ -60,4 +60,16 @@
         </set>
         where id = #{dish.id}
     </update>
+    <select id="searchDishesByCategoryId" resultType="com.sky.entity.Dish">
+        select * from sky_take_out.dish
+        <where>
+            <if test="categoryId != null">
+                category_id=#{categoryId}
+            </if>
+            <if test="name != null">
+                and name like concat('%',#{name},'%')
+            </if>
+            and status=1
+        </where>
+    </select>
 </mapper>

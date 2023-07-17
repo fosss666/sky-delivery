@@ -47,5 +47,6 @@ public interface DishService {
     /**
      * 根据分类id查询菜品
      */
-    List<Dish> searchDishesByCategoryId(Long categoryId);
+    List<Dish> searchDishesByCategoryId(Long categoryId, String name);
+
 }
