@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface SetmealMapper {
 
@@ -32,4 +34,14 @@ public interface SetmealMapper {
      * @return
      */
     Page<SetmealVO> selectList(@Param("categoryId") Integer categoryId, @Param("name") String name, @Param("status") Integer status);
+
+    /**
+     * 根据套餐id查询所有套餐
+     */
+    List<Setmeal> selectListByIds(List<Long> ids);
+
+    /**
+     * 批量删除
+     */
+    void deleteBatch(List<Long> ids);
 }

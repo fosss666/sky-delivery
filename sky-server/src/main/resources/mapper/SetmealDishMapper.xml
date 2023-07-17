@@ -16,4 +16,13 @@
             (#{setmealDish.setmealId},#{setmealDish.dishId},#{setmealDish.name},#{setmealDish.price},#{setmealDish.copies})
         </foreach>
     </insert>
+
+    <delete id="deleteBatchBySetmealIds">
+        delete
+        from sky_take_out.setmeal_dish
+        where setmeal_dish.setmeal_id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
