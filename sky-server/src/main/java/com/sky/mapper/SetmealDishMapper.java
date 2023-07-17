@@ -16,4 +16,9 @@ import java.util.List;
 public interface SetmealDishMapper {
 
     List<SetmealDish> getSetmealsByDishIds(@Param("ids") List<Long> ids);
+
+    /**
+     * 添加套餐菜品关系
+     */
+    void insertBatch(@Param("setmealDishes") List<SetmealDish> setmealDishes);
 }

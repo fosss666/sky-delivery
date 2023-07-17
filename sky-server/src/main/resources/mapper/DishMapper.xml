@@ -71,5 +71,6 @@
             </if>
             and status=1
         </where>
+        order by update_time desc
     </select>
 </mapper>
