@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -100,6 +101,24 @@ public class SetmealServiceImpl implements SetmealService {
         List<SetmealDish> setmealDishList = setmealDishMapper.getBySetmealId(id);
         setmealVO.setSetmealDishes(setmealDishList);
         return setmealVO;
+    }
+
+    /**
+     * 修改套餐
+     */
+    @Transactional
+    @Override
+    public void update(SetmealDTO setmealDTO) {
+        //修改套餐表
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
+        setmealMapper.update(setmeal);
+        //修改关联表  先删后添加
+        List<Long> list = new ArrayList<>();
+        list.add(setmeal.getId());
+        setmealDishMapper.deleteBatchBySetmealIds(list);
+        setmealDishMapper.insertBatch(setmealDTO.getSetmealDishes());
+
     }
 }
 
