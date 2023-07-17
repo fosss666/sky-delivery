@@ -31,6 +31,7 @@ public interface SetmealMapper {
 
     /**
      * 条件查询
+     *
      * @return
      */
     Page<SetmealVO> selectList(@Param("categoryId") Integer categoryId, @Param("name") String name, @Param("status") Integer status);
@@ -44,4 +45,7 @@ public interface SetmealMapper {
      * 批量删除
      */
     void deleteBatch(List<Long> ids);
+
+    @Select("select * from sky_take_out.setmeal where id = #{id};")
+    Setmeal getById(Long id);
 }
