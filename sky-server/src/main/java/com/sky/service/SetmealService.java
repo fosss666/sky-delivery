@@ -28,12 +28,19 @@ public interface SetmealService {
      * 批量删除套餐
      */
     void deleteBatch(List<Long> ids);
+
     /**
      * 根据id查询套餐
      */
     SetmealVO getById(Long id);
+
     /**
      * 修改套餐
      */
     void update(SetmealDTO setmealDTO);
+
+    /**
+     * 套餐停售、启售
+     */
+    void updateStatus(Integer status, Long id);
 }

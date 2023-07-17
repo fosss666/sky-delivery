@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author: fosss
@@ -119,6 +118,14 @@ public class SetmealServiceImpl implements SetmealService {
         setmealDishMapper.deleteBatchBySetmealIds(list);
         setmealDishMapper.insertBatch(setmealDTO.getSetmealDishes());
 
+    }
+
+    /**
+     * 套餐停售、启售
+     */
+    @Override
+    public void updateStatus(Integer status, Long id) {
+        setmealMapper.updateStatus(status, id);
     }
 }
 
