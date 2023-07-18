@@ -60,6 +60,6 @@ public interface DishMapper {
     /**
      * 根据分类id查询菜品
      */
-    List<Dish> searchDishesByCategoryId(@Param("categoryId") Long categoryId, @Param("name") String name);
+    List<Dish> list(@Param("categoryId") Long categoryId, @Param("name") String name);
 
 }

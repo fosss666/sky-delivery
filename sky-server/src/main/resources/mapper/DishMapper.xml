@@ -60,7 +60,7 @@
         </set>
         where id = #{dish.id}
     </update>
-    <select id="searchDishesByCategoryId" resultType="com.sky.entity.Dish">
+    <select id="list" resultType="com.sky.entity.Dish">
         select * from sky_take_out.dish
         <where>
             <if test="categoryId != null">
