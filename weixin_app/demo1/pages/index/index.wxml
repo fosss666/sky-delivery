@@ -21,11 +21,14 @@
   <view>
     {{msg}}
     <button type="primary" bindtap="getUserInfo">获取用户信息</button>
-    昵称：{{nickName}} <br/>
+    昵称：{{nickName}} <br />
     头像：<image style="width: 100px; height: 100px;" src="{{url}}"></image>
   </view>
   <view>
     <button type="warn" bindtap="wxLogin">微信登录</button>
     授权码：{{code}}
+  </view>
+  <view>
+    <button type="default" bindtap="sendRequest">发送请求</button>
   </view>
 </view>

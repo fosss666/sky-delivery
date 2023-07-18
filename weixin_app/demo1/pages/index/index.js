@@ -47,35 +47,46 @@
 //   }
 // })
 Page({
-  data:{
-    msg:"hello world",
-    nickName:"",
-    url:"",
-    code:""
+  data: {
+    msg: "hello world",
+    nickName: "",
+    url: "",
+    code: ""
   },
   //获取用户信息
-  getUserInfo(){
+  getUserInfo() {
     wx.getUserProfile({
       desc: '获取用户信息',
-      success:(res)=>{
+      success: (res) => {
         console.log(res.userInfo)
         //设置参数
         this.setData({
-          nickName:res.userInfo.nickName,
-          url:res.userInfo.avatarUrl
+          nickName: res.userInfo.nickName,
+          url: res.userInfo.avatarUrl
         })
       }
     })
   },
   //获取微信授权码
-  wxLogin(){
+  wxLogin() {
     wx.login({
       // timeout: 0,
-      success:(res)=>{
-        console.log("微信授权码：",res.code)
+      success: (res) => {
+        console.log("微信授权码：", res.code)
         this.setData({
-          code:res.code
+          code: res.code
         })
+      }
+    })
+  },
+
+  //发送请求
+  sendRequest() {
+    wx.request({
+      url: 'http://www.baidu.com',
+      method: "Get",
+      success: (res) => {
+        console.log(res.data)
       }
     })
   }
