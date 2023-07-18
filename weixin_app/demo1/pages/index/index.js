@@ -50,8 +50,10 @@ Page({
   data:{
     msg:"hello world",
     nickName:"",
-    url:""
+    url:"",
+    code:""
   },
+  //获取用户信息
   getUserInfo(){
     wx.getUserProfile({
       desc: '获取用户信息',
@@ -61,6 +63,18 @@ Page({
         this.setData({
           nickName:res.userInfo.nickName,
           url:res.userInfo.avatarUrl
+        })
+      }
+    })
+  },
+  //获取微信授权码
+  wxLogin(){
+    wx.login({
+      // timeout: 0,
+      success:(res)=>{
+        console.log("微信授权码：",res.code)
+        this.setData({
+          code:res.code
         })
       }
     })
