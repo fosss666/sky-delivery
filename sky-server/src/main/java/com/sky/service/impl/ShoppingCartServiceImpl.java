@@ -1,0 +1,91 @@
+package com.sky.service.impl;
+
+import com.sky.context.BaseContext;
+import com.sky.dto.ShoppingCartDTO;
+import com.sky.entity.Dish;
+import com.sky.entity.Setmeal;
+import com.sky.entity.ShoppingCart;
+import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealMapper;
+import com.sky.mapper.ShoppingCartMapper;
+import com.sky.service.ShoppingCartService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+
+/**
+ * @author: fosss
+ * Date: 2023/7/19
+ * Time: 20:37
+ * Description:
+ */
+@Service
+public class ShoppingCartServiceImpl implements ShoppingCartService {
+
+    @Resource
+    private ShoppingCartMapper shoppingCartMapper;
+    @Resource
+    private DishMapper dishMapper;
+    @Resource
+    private SetmealMapper setmealMapper;
+
+    /**
+     * 添加购物车
+     */
+    @Transactional
+    @Override
+    public void addShoppingCart(ShoppingCartDTO shoppingCartDTO) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        shoppingCart.setUserId(BaseContext.getCurrentId());
+        //先判断购物车是否存在，如果存在则修改数量，否则添加购物车
+        ShoppingCart sc = shoppingCartMapper.queryByConditions(shoppingCart);
+        if (sc != null) {
+            //存在该购物车，则在数量上加1
+            shoppingCartMapper.updateNumber(sc.getId());
+        } else {
+            //判断要添加的是套餐还是菜品，添加购物车
+            Long dishId = shoppingCartDTO.getDishId();
+            if (dishId != null) {
+                //要添加的是菜品，构造对象
+                //查询菜品
+                Dish dish = dishMapper.getById(shoppingCartDTO.getDishId());
+                shoppingCart.setImage(dish.getImage());
+                shoppingCart.setName(dish.getName());
+                shoppingCart.setAmount(dish.getPrice());
+
+            } else {
+                //要添加的是套餐，构造套餐对象
+                Setmeal setmeal = setmealMapper.getById(shoppingCartDTO.getSetmealId());
+                shoppingCart.setImage(setmeal.getImage());
+                shoppingCart.setName(setmeal.getName());
+                shoppingCart.setAmount(setmeal.getPrice());
+            }
+            shoppingCart.setCreateTime(LocalDateTime.now());
+            shoppingCart.setNumber(1);
+            //添加购物车
+            shoppingCartMapper.insert(shoppingCart);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
