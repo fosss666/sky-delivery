@@ -16,6 +16,8 @@ spring:
     host: ${sky.redis.host}
     port: ${sky.redis.port}
     database: ${sky.redis.database}
+  cache:
+    type: redis
 #    password:
 mybatis:
   #mapper配置文件
@@ -45,7 +47,6 @@ sky:
     user-secret-key: itheima
     user-ttl: 7200000
     user-token-name: authentication
-
   alioss:
     endpoint: ${sky.alioss.endpoint}
     access-key-id: ${sky.alioss.access-key-id}
