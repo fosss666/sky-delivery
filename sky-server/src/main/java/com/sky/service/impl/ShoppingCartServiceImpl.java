@@ -10,7 +10,6 @@ import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
 import com.sky.service.ShoppingCartService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,18 +74,22 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     /**
      * 查看购物车
+     *
+     * @param userId
      */
     @Override
-    public List<ShoppingCart> list() {
-        return shoppingCartMapper.list();
+    public List<ShoppingCart> list(Long userId) {
+        return shoppingCartMapper.list(userId);
     }
 
     /**
      * 清空购物车
+     *
+     * @param userId
      */
     @Override
-    public void clear() {
-        shoppingCartMapper.clear();
+    public void clear(Long userId) {
+        shoppingCartMapper.clear(userId);
     }
 
     /**

@@ -40,15 +40,19 @@ public interface ShoppingCartMapper {
 
     /**
      * 查看购物车
+     *
+     * @param userId
      */
-    @Select("select * from sky_take_out.shopping_cart")
-    List<ShoppingCart> list();
+    @Select("select * from sky_take_out.shopping_cart where user_id=#{userId}")
+    List<ShoppingCart> list(Long userId);
 
     /**
      * 清空购物车
+     *
+     * @param userId
      */
-    @Delete("delete from sky_take_out.shopping_cart")
-    void clear();
+    @Delete("delete from sky_take_out.shopping_cart where user_id=#{userId}")
+    void clear(Long userId);
 
     /**
      * 数量-1
