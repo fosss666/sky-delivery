@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author: fosss
@@ -69,6 +70,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             //添加购物车
             shoppingCartMapper.insert(shoppingCart);
         }
+    }
+
+    /**
+     * 查看购物车
+     */
+    @Override
+    public List<ShoppingCart> list() {
+        return shoppingCartMapper.list();
     }
 }
 
