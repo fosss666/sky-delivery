@@ -5,6 +5,7 @@ import com.sky.entity.ShoppingCart;
 import com.sky.result.Result;
 import com.sky.service.ShoppingCartService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,17 @@ public class ShoppingCartController {
         log.info("查看购物车");
         List<ShoppingCart> list = shoppingCartService.list();
         return Result.success(list);
+    }
+
+    /**
+     * 清空购物车
+     */
+    @ApiOperation("清空购物车")
+    @DeleteMapping("/clean")
+    public Result clear(){
+        log.info("清空购物车");
+        shoppingCartService.clear();
+        return Result.success();
     }
 }
 
