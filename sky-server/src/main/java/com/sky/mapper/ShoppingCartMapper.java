@@ -22,12 +22,12 @@ public interface ShoppingCartMapper {
     ShoppingCart queryByConditions(ShoppingCart shoppingCart);
 
     /**
-     * 修改购物车中的数量字段
+     * 增加购物车中的数量字段
      *
      * @param id
      */
     @Update("update sky_take_out.shopping_cart set number=number+1 where id=#{id}")
-    void updateNumber(Long id);
+    void increNumber(Long id);
 
     /**
      * 添加购物车
@@ -49,4 +49,20 @@ public interface ShoppingCartMapper {
      */
     @Delete("delete from sky_take_out.shopping_cart")
     void clear();
+
+    /**
+     * 数量-1
+     *
+     * @param id
+     */
+    @Update("update sky_take_out.shopping_cart set number=number-1 where id=#{id}")
+    void decNumber(Long id);
+
+    /**
+     * 根据id删除购物车
+     *
+     * @param id
+     */
+    @Delete("delete from sky_take_out.shopping_cart where id=#{id}")
+    void deleteOne(Long id);
 }

@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -55,9 +56,20 @@ public class ShoppingCartController {
      */
     @ApiOperation("清空购物车")
     @DeleteMapping("/clean")
-    public Result clear(){
+    public Result clear() {
         log.info("清空购物车");
         shoppingCartService.clear();
+        return Result.success();
+    }
+
+    /**
+     * 删除购物车中的一个商品
+     */
+    @ApiOperation("删除购物车中的一个商品")
+    @PostMapping("/sub")
+    public Result removeOne(@RequestBody ShoppingCartDTO shoppingCartDTO) {
+        log.info("删除购物车中的一个商品:{}", shoppingCartDTO);
+        shoppingCartService.removeOne(shoppingCartDTO);
         return Result.success();
     }
 }

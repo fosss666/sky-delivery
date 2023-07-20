@@ -10,6 +10,7 @@ import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
 import com.sky.service.ShoppingCartService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart sc = shoppingCartMapper.queryByConditions(shoppingCart);
         if (sc != null) {
             //存在该购物车，则在数量上加1
-            shoppingCartMapper.updateNumber(sc.getId());
+            shoppingCartMapper.increNumber(sc.getId());
         } else {
             //判断要添加的是套餐还是菜品，添加购物车
             Long dishId = shoppingCartDTO.getDishId();
@@ -86,6 +87,26 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void clear() {
         shoppingCartMapper.clear();
+    }
+
+    /**
+     * 删除购物车中的一个商品
+     */
+    @Override
+    public void removeOne(ShoppingCartDTO shoppingCartDTO) {
+        //查询该商品，如果数量>1，则数量-1，否则直接删除
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        shoppingCart.setUserId(BaseContext.getCurrentId());
+        ShoppingCart sc = shoppingCartMapper.queryByConditions(shoppingCart);
+
+        if (sc != null && sc.getNumber() > 1) {
+            shoppingCartMapper.decNumber(sc.getId());
+        } else if (sc != null) {
+            //直接删除
+            shoppingCartMapper.deleteOne(sc.getId());
+        }
+
     }
 }
 
