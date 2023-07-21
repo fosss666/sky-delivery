@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
@@ -62,14 +63,14 @@ public class OrderServiceImpl implements OrderService {
         AddressBook addressBook = addressBookMapper.getById(addressBookId);
         if (addressBook == null) {
             //地址不存在
-            throw new AddressBookBusinessException("地址错误");
+            throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
         }
 
         Long userId = BaseContext.getCurrentId();
         List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(userId);
         if (shoppingCartList == null || shoppingCartList.size() == 0) {
             //不存在购物数据
-            throw new ShoppingCartBusinessException("请先点菜");
+            throw new ShoppingCartBusinessException(MessageConstant.SHOPPING_CART_IS_NULL);
         }
 
         //向订单表插入1条数据
@@ -200,6 +201,47 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(id);
         orderVO.setOrderDetailList(orderDetailList);
         return orderVO;
+    }
+
+    /**
+     * 取消订单
+     */
+    @Override
+    public void cancel(Long id) throws Exception {
+        //查询订单，根据订单状态进行分别处理
+        Orders orders = orderMapper.getById(id);
+        if (orders == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        ////订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
+        if (orders.getStatus() > 2) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        Orders o = new Orders();
+        o.setId(orders.getId());
+
+        // 订单处于待接单状态下取消，需要进行退款
+        if (orders.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
+            //调用微信支付退款接口
+            //TODO 微信退款
+            /*
+            weChatPayUtil.refund(
+                    orders.getNumber(), //商户订单号
+                    orders.getNumber(), //商户退款单号
+                    new BigDecimal(0.01),//退款金额，单位 元
+                    new BigDecimal(0.01));//原订单金额
+*/
+            //支付状态修改为 退款
+            o.setPayStatus(Orders.REFUND);
+        }
+
+        // 更新订单状态、取消原因、取消时间
+        o.setStatus(Orders.CANCELLED);
+        o.setCancelReason("用户取消");
+        o.setCancelTime(LocalDateTime.now());
+        orderMapper.update(orders);
     }
 }
 
