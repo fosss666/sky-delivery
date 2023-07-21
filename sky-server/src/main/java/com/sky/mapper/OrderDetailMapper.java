@@ -4,6 +4,7 @@ import com.sky.entity.OrderDetail;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public interface OrderDetailMapper {
      * @param orderDetailList
      */
     void insertBatch(@Param("orderDetailList") List<OrderDetail> orderDetailList);
+
+    @Select("select * from sky_take_out.order_detail where order_id=#{id}")
+    List<OrderDetail> getByOrderId(Long id);
 }
 
 
