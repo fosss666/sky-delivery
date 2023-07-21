@@ -5,6 +5,7 @@ import com.sky.dto.OrdersSubmitDTO;
 import com.sky.result.PageResult;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 
 /**
  * @author: fosss
@@ -36,4 +37,8 @@ public interface OrderService {
      * 历史订单查询
      */
     PageResult queryHistoryOrders(Integer page, Integer pageSize, Integer status);
+    /**
+     * 查询订单详情
+     */
+    OrderVO queryOrderDetails(Long id);
 }

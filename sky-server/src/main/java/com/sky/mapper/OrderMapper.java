@@ -41,4 +41,7 @@ public interface OrderMapper {
      * 查询历史订单
      */
     Page<Orders> queryHistoryOrders(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    @Select("select * from sky_take_out.orders where id=#{id}")
+    Orders getById(Long id);
 }
