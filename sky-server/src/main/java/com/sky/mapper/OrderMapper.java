@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * @author: fosss
  * Date: 2023/7/20
@@ -44,4 +46,11 @@ public interface OrderMapper {
 
     @Select("select * from sky_take_out.orders where id=#{id}")
     Orders getById(Long id);
+
+    /**
+     * 条件查询
+     * @param ordersPageQueryDTO
+     * @return
+     */
+    Page<Orders> queryPage(OrdersPageQueryDTO ordersPageQueryDTO);
 }

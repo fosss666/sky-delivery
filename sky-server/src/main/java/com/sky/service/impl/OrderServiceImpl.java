@@ -20,6 +20,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -265,6 +266,37 @@ public class OrderServiceImpl implements OrderService {
             shoppingCartMapper.insertBatch(collect);
         }
     }
+
+    /**
+     * 订单搜索
+     */
+    @Override
+    public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        Page<Orders> page = orderMapper.queryPage(ordersPageQueryDTO);
+        List<Orders> ordersList = page.getResult();
+        //转成orderVo
+        List<OrderVO> collect = ordersList.stream().map(orders -> {
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(orders, orderVO);
+            //获取拼接好的菜品字符串
+            String orderDishesStr = getOrderDishesStr(orders.getId());
+            orderVO.setOrderDishes(orderDishesStr);
+            return orderVO;
+        }).collect(Collectors.toList());
+        return new PageResult(page.getTotal(), collect);
+    }
+
+    private String getOrderDishesStr(Long id) {
+        List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(id);
+        List<String> collect = orderDetailList.stream().map(orderDetail -> {
+            return orderDetail.getName() + "*" + orderDetail.getNumber() + "；";
+        }).collect(Collectors.toList());
+        //将集合拼接成字符串返回
+        String res = String.join("", collect);
+        return res;
+    }
+
 }
 
 
