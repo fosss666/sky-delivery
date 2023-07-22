@@ -90,4 +90,9 @@
         </where>
         order by order_time
     </select>
+    <select id="countDeliverStatus" resultType="java.lang.Integer">
+        select count(*)
+        from sky_take_out.orders
+        where status = #{status}
+    </select>
 </mapper>
