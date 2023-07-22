@@ -69,4 +69,10 @@ public interface ShoppingCartMapper {
      */
     @Delete("delete from sky_take_out.shopping_cart where id=#{id}")
     void deleteOne(Long id);
+
+    /**
+     * 批量插入
+     * @param collect
+     */
+    void insertBatch(List<ShoppingCart> collect);
 }
