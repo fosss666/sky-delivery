@@ -95,4 +95,10 @@
         from sky_take_out.orders
         where status = #{status}
     </select>
+
+    <update id="confirm">
+        update sky_take_out.orders
+        set status=#{status}
+        where id = #{id}
+    </update>
 </mapper>
