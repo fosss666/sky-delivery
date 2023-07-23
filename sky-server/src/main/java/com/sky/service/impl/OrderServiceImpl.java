@@ -350,6 +350,34 @@ public class OrderServiceImpl implements OrderService {
         orders.setStatus(Orders.CANCELLED);//修改状态
         orders.setRejectionReason(ordersRejectionDTO.getRejectionReason());//拒单原因
         orders.setCancelTime(LocalDateTime.now());//订单取消时间
+        orders.setPayStatus(Orders.REFUND);
+
+        orderMapper.update(orders);
+    }
+
+    /**
+     * 取消订单
+     */
+    @Override
+    public void adminCancel(OrdersCancelDTO ordersCancelDTO) throws Exception {
+        //查询订单，如果已经支付则需要退款
+        Orders order = orderMapper.getById(ordersCancelDTO.getId());
+        if (order.getPayStatus().equals(Orders.PAID)) {
+            //退款
+            String refund = weChatPayUtil.refund(
+                    order.getNumber(),
+                    order.getNumber(),
+                    new BigDecimal(0.01),
+                    new BigDecimal(0.01)
+            );
+            log.info("申请退款：{}", refund);
+        }
+        //修改订单状态为已取消
+        Orders orders = new Orders();
+        orders.setId(ordersCancelDTO.getId());
+        orders.setCancelReason(ordersCancelDTO.getCancelReason());
+        orders.setPayStatus(Orders.REFUND);
+        orders.setStatus(Orders.CANCELLED);
 
         orderMapper.update(orders);
     }
