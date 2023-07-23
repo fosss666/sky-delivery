@@ -15,6 +15,7 @@ import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.build.Plugin;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -96,6 +97,17 @@ public class OrderController {
     public Result cancel(@RequestBody OrdersCancelDTO ordersCancelDTO) throws Exception {
         log.info("取消订单：{}", ordersCancelDTO);
         orderService.adminCancel(ordersCancelDTO);
+        return Result.success();
+    }
+
+    /**
+     * 派送订单
+     */
+    @ApiOperation("派送订单")
+    @PutMapping("/delivery/{id}")
+    public Result delivery(@PathVariable("id") Long id) {
+        log.info("派送订单：{}", id);
+        orderService.delivery(id);
         return Result.success();
     }
 }

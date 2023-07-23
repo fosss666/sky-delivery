@@ -78,4 +78,8 @@ public interface OrderService {
      * 取消订单
      */
     void adminCancel(OrdersCancelDTO ordersCancelDTO) throws Exception;
+    /**
+     * 派送订单
+     */
+    void delivery(Long id);
 }
