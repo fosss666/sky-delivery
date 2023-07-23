@@ -65,3 +65,9 @@ sky:
     we-chat-pay-cert-file-path: ${sky.wechat.we-chat-pay-cert-file-path}
     notify-url: ${sky.wechat.notify-url}
     refund-notify-url: ${sky.wechat.refund-notify-url}
+
+    #百度地图
+    shop:
+      address: ${sky.shop.address}
+    baidu:
+      ak: ${sky.baidu.ak}
