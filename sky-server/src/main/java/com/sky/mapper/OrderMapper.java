@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -66,4 +67,10 @@ public interface OrderMapper {
      * 接单
      */
     void confirm(OrdersConfirmDTO ordersConfirmDTO);
+
+    /**
+     * 查询状态为待支付且下单时间超过十五分钟的订单
+     */
+    @Select("select * from sky_take_out.orders where status=#{status} and order_time < #{time}")
+    List<Orders> queryTimeoutAndOrderTimeLT(Integer status, LocalDateTime time);
 }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * Description: 自定义定时任务类
  */
 @Slf4j
-@Component
+//@Component
 public class MyTask {
 
     @Scheduled(cron = "0/5 * * * * ? ")
