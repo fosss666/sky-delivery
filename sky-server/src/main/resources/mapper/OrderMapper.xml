@@ -101,4 +101,17 @@
         set status=#{status}
         where id = #{id}
     </update>
+
+    <select id="queryTurnoverOfDayAndStatus" resultType="java.lang.Double">
+        select sum(amount)
+        from sky_take_out.orders
+        <where>
+            <if test="beginTime != null and endTime != null">
+                order_time &gt;= #{beginTime} and order_time &lt;= #{endTime}
+            </if>
+            <if test="status != null">
+                and status=#{status}
+            </if>
+        </where>
+    </select>
 </mapper>

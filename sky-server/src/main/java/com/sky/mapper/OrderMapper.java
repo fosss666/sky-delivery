@@ -4,10 +4,7 @@ import com.github.pagehelper.Page;
 import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -73,4 +70,11 @@ public interface OrderMapper {
      */
     @Select("select * from sky_take_out.orders where status=#{status} and order_time < #{time}")
     List<Orders> queryTimeoutAndOrderTimeLT(Integer status, LocalDateTime time);
+
+    /**
+     * 根据时间区间和订单状态查询
+     */
+    Double queryTurnoverOfDayAndStatus(@Param("beginTime") LocalDateTime beginTime,
+                                       @Param("endTime") LocalDateTime endTime,
+                                       @Param("status") Integer status);
 }
