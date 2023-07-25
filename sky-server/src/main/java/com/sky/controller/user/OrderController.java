@@ -79,6 +79,9 @@ public class OrderController {
                 .build();
 
         log.info("生成预支付交易单：{}", orderPaymentVO);
+        //这里跳过实际调用微信支付过程，直接调用支付成功方法
+        orderService.paySuccess(ordersPaymentDTO.getOrderNumber());
+
         return Result.success(orderPaymentVO);
     }
 

@@ -21,6 +21,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.webSocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,6 +65,8 @@ public class OrderServiceImpl implements OrderService {
     private UserMapper userMapper;
     @Resource
     private WeChatPayUtil weChatPayUtil;
+    @Resource
+    private WebSocketServer webSocketServer;
 
     /**
      * 用户下单
@@ -79,8 +82,8 @@ public class OrderServiceImpl implements OrderService {
             throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
         }
 
-        //检查用户收货地址是否超出配送范围
-        checkOutOfRange(addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail());
+        //检查用户收货地址是否超出配送范围   TODO 不好测试，先注释掉
+        //checkOutOfRange(addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail());
 
         Long userId = BaseContext.getCurrentId();
         List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(userId);
@@ -171,6 +174,14 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+
+        //通过websocket向客户端推送支付成功消息
+        Map map = new HashMap();
+        map.put("type", 1);//1表示来单提醒，2表示客户催单
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号：" + outTradeNo);
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
     }
 
     /**
