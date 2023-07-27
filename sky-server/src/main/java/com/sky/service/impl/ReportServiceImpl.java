@@ -1,13 +1,16 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import io.swagger.models.auth.In;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -167,6 +170,24 @@ public class ReportServiceImpl implements ReportService {
         orderReportVO.setOrderCompletionRate(orderCompletionRate);
 
         return orderReportVO;
+    }
+
+    /**
+     * 查询销量排名top10
+     */
+    @Override
+    public SalesTop10ReportVO getTop10(LocalDate begin, LocalDate end) {
+        List<GoodsSalesDTO> goodsSalesDTOList = orderMapper.getTop10(begin, end, Orders.COMPLETED);
+        //封装返回数据
+        SalesTop10ReportVO salesTop10ReportVO = new SalesTop10ReportVO();
+        List<String> nameList = goodsSalesDTOList.stream().map(item -> item.getName()).collect(Collectors.toList());
+        List<Integer> numberList = goodsSalesDTOList.stream().map(item -> item.getNumber()).collect(Collectors.toList());
+        String nameListStr = StringUtils.join(nameList, ",");
+        String numberListStr = StringUtils.join(numberList, ",");
+        salesTop10ReportVO.setNameList(nameListStr);
+        salesTop10ReportVO.setNumberList(numberListStr);
+
+        return salesTop10ReportVO;
     }
 }
 
