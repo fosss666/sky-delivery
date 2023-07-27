@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: fosss
@@ -77,4 +78,9 @@ public interface OrderMapper {
     Double queryTurnoverOfDayAndStatus(@Param("beginTime") LocalDateTime beginTime,
                                        @Param("endTime") LocalDateTime endTime,
                                        @Param("status") Integer status);
+
+    /**
+     * 查询订单数
+     */
+    int countByMap(Map map);
 }

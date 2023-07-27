@@ -4,6 +4,7 @@ import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import io.swagger.models.auth.In;
@@ -108,6 +109,64 @@ public class ReportServiceImpl implements ReportService {
         userReportVO.setNewUserList(StringUtils.join(newUserList, ","));
 
         return userReportVO;
+    }
+
+    /**
+     * 订单统计
+     */
+    @Override
+    public OrderReportVO getOrderReportVo(LocalDate begin, LocalDate end) {
+        OrderReportVO orderReportVO = new OrderReportVO();
+        //dateList
+        List<LocalDate> dateList = new ArrayList<>();
+        dateList.add(begin);
+        while (!begin.equals(end)) {
+            begin = begin.plusDays(1);
+            dateList.add(begin);
+        }
+        String dateListStr = StringUtils.join(dateList, ",");
+        orderReportVO.setDateList(dateListStr);
+
+        //orderCountList validOrderCountList totalOrderCount validOrderCount
+        List<Integer> orderCountList = new ArrayList<>();
+        List<Integer> validOrderCountList = new ArrayList<>();
+        int totalOrderCount = 0;
+        int totalValidOrderCount = 0;
+        for (LocalDate date : dateList) {
+            Map map = new HashMap();
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+            map.put("beginTime", beginTime);
+            map.put("endTime", endTime);
+            //查询当日订单总数
+            int orderCount = orderMapper.countByMap(map);
+            orderCountList.add(orderCount);
+
+            //查询当日有效订单数
+            map.put("status", Orders.COMPLETED);//订单状态为已完成
+            int validOrderCount = orderMapper.countByMap(map);
+            validOrderCountList.add(validOrderCount);
+
+            //计算总订单数
+            totalOrderCount += orderCount;
+
+            //计算总有效订单数
+            totalValidOrderCount += validOrderCount;
+
+        }
+        orderReportVO.setOrderCountList(StringUtils.join(orderCountList, ","));
+        orderReportVO.setValidOrderCountList(StringUtils.join(validOrderCountList, ","));
+        orderReportVO.setTotalOrderCount(totalOrderCount);
+        orderReportVO.setValidOrderCount(totalValidOrderCount);
+
+        //orderCompletionRate 计算订单完成率
+        double orderCompletionRate = 0.0;
+        if (totalOrderCount != 0) {
+            orderCompletionRate = Integer.valueOf(totalValidOrderCount).doubleValue() / totalOrderCount;
+        }
+        orderReportVO.setOrderCompletionRate(orderCompletionRate);
+
+        return orderReportVO;
     }
 }
 
