@@ -75,7 +75,7 @@ public interface OrderMapper {
     List<Orders> queryTimeoutAndOrderTimeLT(Integer status, LocalDateTime time);
 
     /**
-     * 根据时间区间和订单状态查询
+     * 根据时间区间和订单状态查询营业额
      */
     Double queryTurnoverOfDayAndStatus(@Param("beginTime") LocalDateTime beginTime,
                                        @Param("endTime") LocalDateTime endTime,
